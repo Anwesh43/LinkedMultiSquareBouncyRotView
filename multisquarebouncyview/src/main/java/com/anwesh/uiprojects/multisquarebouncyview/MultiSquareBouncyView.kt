@@ -215,4 +215,13 @@ class MultiSquareBouncyView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : MultiSquareBouncyView {
+            val view : MultiSquareBouncyView = MultiSquareBouncyView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
