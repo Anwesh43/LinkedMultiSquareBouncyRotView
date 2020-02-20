@@ -49,7 +49,7 @@ fun Canvas.drawMultiRotSquare(w : Float, scale : Float, paint : Paint) {
     }
 }
 
-fun Canvas.drawMRSNode(i : Int, scale : Float, paint : Paint) {
+fun Canvas.drawMBSNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val gap : Float = h / (nodes + 1)
@@ -122,6 +122,48 @@ class MultiSquareBouncyView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class MSBNode(var i : Int, val state : State = State()) {
+
+        private var next : MSBNode? = null
+        private var prev : MSBNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = MSBNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawMBSNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Float) -> Unit) {
+            state.update(cb)
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : MSBNode {
+            var curr : MSBNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
