@@ -190,4 +190,27 @@ class MultiSquareBouncyView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : MultiSquareBouncyView) {
+
+        private val animator : Animator = Animator(view)
+        private val msb : MultiBouncySquare = MultiBouncySquare(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            msb.draw(canvas, paint)
+            animator.animate {
+                msb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            msb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
