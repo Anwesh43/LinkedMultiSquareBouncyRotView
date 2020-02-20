@@ -14,7 +14,7 @@ import android.content.Context
 
 val nodes : Int = 5
 val parts : Int = 5
-val scGap : Float = 0.02f
+val scGap : Float = 0.02f / parts
 val strokeFactor : Int = 90
 val foreColor : Int = Color.parseColor("#3F51B5")
 val backColor : Int = Color.parseColor("#BDBDBD")
@@ -29,14 +29,18 @@ fun Canvas.drawRotSquare(i : Int, w : Float, scale : Float, paint : Paint) {
     val gap : Float = w / parts
     val sf : Float = scale.sinify().divideScale(i, parts)
     save()
-    translate(gap * i, 0f)
+    translate(gap * i + gap / 2, 0f)
     for (j in 0..1) {
         save()
         scale(1f - 2 * j, 1f - 2 * j)
         save()
         translate(gap / 2, gap / 2)
-        rotate(90f * sf)
-        drawLine(0f, 0f, -gap, 0f, paint)
+        for (k in 0..1) {
+            save()
+            rotate(90f * sf * k)
+            drawLine(0f, 0f, -gap, 0f, paint)
+            restore()
+        }
         restore()
         restore()
     }
